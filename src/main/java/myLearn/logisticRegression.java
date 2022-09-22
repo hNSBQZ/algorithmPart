@@ -32,7 +32,14 @@ public class logisticRegression {
             for(int j=0;j<dimension+1;j++)
             {
                 double tempSum=0;
-
+                int []selectedRow=dataHandling.randomSet(0,m,batchSize);//批量梯度下降,随机选取下降的向量
+                for(int k=0;k<batchSize;k++)
+                {
+                    int x=selectedRow[k];
+                    double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(x,x).transpose()).get(0))));
+                    tempSum+=(hx-train_y.rows(x,x).get(0))*train_x.get(x,j);
+                }
+                double tempWj=tw.get(j)*(1-learningRate*lambda/m);
             }
         }
 

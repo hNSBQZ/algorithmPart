@@ -9,5 +9,6 @@
         <module name="algorithmPart" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel target="18" />
   </component>
 </project>
