@@ -21,4 +21,25 @@ public class dataHandling {
         * */
         return new HashMap<String, SimpleMatrix>();
     }
+    public static int[] randomSet(int min,int max,int n)
+    {
+        //随机抽样，某个范围内抽n个
+        int[] result = new int[n];
+        int count = 0;
+        while(count < n) {
+            int num = (int) (Math.random() * (max - min)) + min;
+            boolean flag = true;
+            for (int j = 0; j < n; j++) {
+                if(num == result[j]){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                result[count] = num;
+                count++;
+            }
+        }
+        return result;
+    }
 }
