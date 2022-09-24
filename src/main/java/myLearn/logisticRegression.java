@@ -23,7 +23,6 @@ public class logisticRegression {
     public double[] fit(SimpleMatrix train_x, SimpleMatrix train_y)//返回训练过程中的损失函数值数组，数组结尾赋值为-1
     {
         double[]JwRecord=new double[TrainingRound];
-        int index=0;
         int m=train_x.numRows();//样本数量
         int dimension=train_x.numCols();//特征数量
         w=new SimpleMatrix(1,dimension+1);
@@ -48,6 +47,7 @@ public class logisticRegression {
                 double tempWj=tw.get(j)*(1-learningRate*lambda/m)-learningRate/m*tempSum;
                 w.set(j,tempWj);
             }
+            //System.out.println(i);
             double regularization=0,mainPart=0,Jw=0;
             for(int j=0;j<m;j++)
             {
@@ -58,14 +58,12 @@ public class logisticRegression {
             for(int j=0;j<dimension+1;j++)
             {
                 double wj=w.get(j);
-                regularization+=j*j;
+                regularization+=wj*wj;
             }
-            Jw=1/m*mainPart+lambda/(2*m)*regularization;
-            JwRecord[index]=Jw;
-            if(index==0)continue;
-            if(JwRecord[index-1]-Jw<threshold){JwRecord[index+1]=-1;break;}
-            index++;
+            Jw=mainPart/m+lambda/(2*m)*regularization;
+            //System.out.println(Jw);
         }
+        //System.out.println(w);
         return JwRecord;
     }
     public void fitFromFile(String fileName) throws IOException {
@@ -102,6 +100,9 @@ public class logisticRegression {
         if(w==null)return null;
         int m=test_x.numRows();
         double []pred_y=new double[m];
+        SimpleMatrix stuff=new SimpleMatrix(m,1);//填充矩阵
+        stuff.fill(1);
+        test_x=stuff.combine(0,1,test_x);
         for(int i=0;i<m;i++)
         {
             double y=1/(1+Math.pow(Math.E,-(w.mult(test_x.rows(i,i+1).transpose())).get(0)));

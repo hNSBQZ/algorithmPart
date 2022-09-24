@@ -210,7 +210,7 @@ public class dataHandling {
         int count = 0;
         while(count < n) {
             int num = (int) (Math.random() * (max - min)) + min;
-            System.out.println(num);
+            //System.out.println(num);
             boolean flag = true;
             for (int j = 0; j < n; j++) {
                 if(num == result[j]){

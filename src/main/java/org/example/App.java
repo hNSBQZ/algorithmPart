@@ -1,13 +1,12 @@
 package org.example;
-import myLearn.dataHandling;
+
 import myLearn.logisticRegression;
 import org.ejml.simple.SimpleMatrix;
 
-import java.io.*;
 import java.util.HashMap;
 
 import static myLearn.dataHandling.*;
-import static myLearn.errorAnalysis.*;
+import static myLearn.errorAnalysis.cal_matrix;
 
 /**
  * Hello world!
@@ -31,7 +30,8 @@ public class App
         logisticRegression lg=new logisticRegression(3000,0.001,0,0.1,200);
         lg.fit(train_x,train_y);
         SimpleMatrix pred_y=lg.predict(test_x);
-        System.out.println(pred_y);
+        //System.out.println(pred_y);
+        //System.out.println(test_y);
         SimpleMatrix confusionMatrix=cal_matrix(pred_y,test_y);
         System.out.println(confusionMatrix);
     }
