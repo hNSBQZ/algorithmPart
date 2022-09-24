@@ -19,7 +19,6 @@ public class App
         SimpleMatrix x=loadMatrixFromCsv_xy("JDT.csv").get("x");
         SimpleMatrix y=loadMatrixFromCsv_xy("JDT.csv").get("y");
 
-        int m=train_x.numRows();//样本数量
-        int dimension=train_x.numCols();//特征数量
+
     }
 }
