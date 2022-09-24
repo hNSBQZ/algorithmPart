@@ -7,12 +7,12 @@ import java.io.*;
 public class logisticRegression {
 
     private int TrainingRound;
-    private float threshold;
-    private float lambda;
-    private float learningRate;
+    private double threshold;
+    private double lambda;
+    private double learningRate;
     private int batchSize;
     private SimpleMatrix w=null;
-    public logisticRegression(int TrainingRound,float threshold,float lambda,float learningRate,int batchSize)
+    public logisticRegression(int TrainingRound,double threshold,double lambda,double learningRate,int batchSize)
     {
         this.TrainingRound=TrainingRound;
         this.threshold=threshold;
@@ -29,6 +29,7 @@ public class logisticRegression {
         w=new SimpleMatrix(1,dimension+1);
         w.fill(0.1);//初始化模型
         SimpleMatrix stuff=new SimpleMatrix(m,1);//填充矩阵
+        stuff.fill(1);
         train_x=stuff.combine(0,1,train_x);
         for(int i=0;i<TrainingRound;i++)
         {
@@ -41,8 +42,8 @@ public class logisticRegression {
                 for(int k=0;k<batchSize;k++)
                 {
                     int x=selectedRow[k];
-                    double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(x,x).transpose()).get(0))));
-                    tempSum+=(hx-train_y.rows(x,x).get(0))*train_x.get(x,j);
+                    double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(x,x+1).transpose()).get(0))));
+                    tempSum+=(hx-train_y.rows(x,x+1).get(0))*train_x.get(x,j);
                 }
                 double tempWj=tw.get(j)*(1-learningRate*lambda/m)-learningRate/m*tempSum;
                 w.set(j,tempWj);
@@ -50,8 +51,8 @@ public class logisticRegression {
             double regularization=0,mainPart=0,Jw=0;
             for(int j=0;j<m;j++)
             {
-                double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(j,j).transpose()).get(0))));
-                double y=train_y.rows(j,j).get(0);
+                double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(j,j+1).transpose()).get(0))));
+                double y=train_y.rows(j,j+1).get(0);
                 mainPart+=-y*Math.log(hx)-(1-y)*Math.log(1-hx);
             }
             for(int j=0;j<dimension+1;j++)
@@ -103,7 +104,7 @@ public class logisticRegression {
         double []pred_y=new double[m];
         for(int i=0;i<m;i++)
         {
-            double y=1/(1+Math.pow(Math.E,-(w.mult(test_x.cols(i,i).transpose())).get(0)));
+            double y=1/(1+Math.pow(Math.E,-(w.mult(test_x.rows(i,i+1).transpose())).get(0)));
             y=(y>0.5)?1:0;
             pred_y[i]=y;
         }

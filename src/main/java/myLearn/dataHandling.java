@@ -104,7 +104,6 @@ public class dataHandling {
         return simpleMatrix;
     }
 
-
     public static HashMap<String,SimpleMatrix> train_test_split(SimpleMatrix X, SimpleMatrix y,double train_Size)
     {
         /*
@@ -169,6 +168,41 @@ public class dataHandling {
         hashMap.put("test_y",test_y);
         return hashMap;
     }
+
+    public static SimpleMatrix min_max_handing(SimpleMatrix x){
+        double [][] min_max_matrix = new double[x.numRows()][x.numCols()];
+        for(int i = 0;i < x.numRows();i++ ){
+            for(int j = 0;j < x.numCols();j++) {
+                min_max_matrix[i][j]= x.get(i,j);
+            }
+        }
+        for(int j = 0;j < min_max_matrix[0].length;j++){
+            double max = min_max_matrix[0][j],min= min_max_matrix[0][j];
+            for(int i = 0;i<min_max_matrix.length;i++){
+                if(max<min_max_matrix[i][j]){
+                    max = min_max_matrix[i][j];
+                }
+            }
+            for(int i = 0;i<min_max_matrix.length;i++){
+                if(min>min_max_matrix[i][j]){
+                    min = min_max_matrix[i][j];
+                }
+            }
+            if(min==max){
+                for(int i = 0;i<min_max_matrix.length;i++)
+                {
+                    min_max_matrix[i][j] = 0.5;
+                }
+            }else{
+                for(int i = 0;i<min_max_matrix.length;i++){
+                    min_max_matrix[i][j] = (min_max_matrix[i][j]-min)/(max-min);
+                }
+            }
+
+        }
+        return new SimpleMatrix(min_max_matrix);
+    }
+
     public static int[] randomSet(int min,int max,int n)
     {
         //随机抽样，某个范围内抽n个
