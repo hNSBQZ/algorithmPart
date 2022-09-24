@@ -80,9 +80,20 @@ public class logisticRegression {
             tempw[i]=Double.parseDouble(tempStrw[i]);
         w=new SimpleMatrix(1,tempStrw.length,true,tempw);
     }
-    public void storeModule(String fileName)
-    {
+    public void storeModule(String fileName) {
         //以模型名命名文件名，将模型永久化存储
+        String tempStrw="";
+        for(int i=0;i<w.numCols();i++)
+            tempStrw+=(String.valueOf(w.get(i))+",");
+        try {
+            FileWriter writer=new FileWriter(fileName);
+            writer.write("");
+            writer.write(tempStrw);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
     public SimpleMatrix predict(SimpleMatrix test_x)
