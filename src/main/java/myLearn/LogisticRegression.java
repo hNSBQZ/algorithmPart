@@ -4,15 +4,14 @@ import org.ejml.simple.SimpleMatrix;
 
 import java.io.*;
 
-public class logisticRegression {
-
-    private int TrainingRound;
-    private double threshold;
-    private double lambda;
-    private double learningRate;
-    private int batchSize;
+public class LogisticRegression {
+    private int TrainingRound=0;
+    private double threshold=0;
+    private double lambda=0;
+    private double learningRate=0;
+    private int batchSize=0;
     private SimpleMatrix w=null;
-    public logisticRegression(int TrainingRound,double threshold,double lambda,double learningRate,int batchSize)
+    public LogisticRegression(int TrainingRound,double threshold,double lambda,double learningRate,int batchSize)
     {
         this.TrainingRound=TrainingRound;
         this.threshold=threshold;
@@ -20,9 +19,20 @@ public class logisticRegression {
         this.learningRate=learningRate;
         this.batchSize=batchSize;
     }//初始化分类器，选择学习率，正则化参数，阈值，训练轮数，批量梯度下降批数
+
+    public LogisticRegression(){}
+
+    public void setTrainingArg(int TrainingRound,double threshold,double lambda,double learningRate,int batchSize)
+    {
+        this.TrainingRound=TrainingRound;
+        this.threshold=threshold;
+        this.lambda=lambda;
+        this.learningRate=learningRate;
+        this.batchSize=batchSize;
+    }
     public double[] fit(SimpleMatrix train_x, SimpleMatrix train_y)//返回训练过程中的损失函数值数组，数组结尾赋值为-1
     {
-        double[]JwRecord=new double[TrainingRound];
+        double[]JwRecord=new double[TrainingRound+1];
         int m=train_x.numRows();//样本数量
         int dimension=train_x.numCols();//特征数量
         w=new SimpleMatrix(1,dimension+1);
@@ -37,7 +47,7 @@ public class logisticRegression {
             {
                 //设clean发生的概率为1
                 double tempSum=0;
-                int []selectedRow=dataHandling.randomSet(0,m,batchSize);//批量梯度下降,随机选取下降的向量
+                int []selectedRow=DataHandling.randomSet(0,m,batchSize);//批量梯度下降,随机选取下降的向量
                 for(int k=0;k<batchSize;k++)
                 {
                     int x=selectedRow[k];
@@ -62,23 +72,37 @@ public class logisticRegression {
             }
             Jw=mainPart/m+lambda/(2*m)*regularization;
             //System.out.println(Jw);
+            JwRecord[i]=Jw;
+            if(i!=0 && JwRecord[i-1]-JwRecord[i]<threshold)
+            {
+                JwRecord[i+1]=-1;
+                break;
+            }
         }
         //System.out.println(w);
         return JwRecord;
     }
-    public void fitFromFile(String fileName) throws IOException {
+    public void fitFromFile(String fileName) {
         //从指定文件名里加载模型
-        FileReader fr=new FileReader(new File(fileName));
-        BufferedReader br=new BufferedReader(fr);
-        String line=br.readLine();
-        br.close();
-        fr.close();
-        String []tempStrw=line.split(",");
-        double[] tempw=new double[tempStrw.length];
-        for(int i=0;i<tempStrw.length;i++)
-            tempw[i]=Double.parseDouble(tempStrw[i]);
-        w=new SimpleMatrix(1,tempStrw.length,true,tempw);
+        FileReader fr= null;
+        try {
+            fr = new FileReader(new File(fileName));
+            BufferedReader br=new BufferedReader(fr);
+            String line=br.readLine();
+            br.close();
+            fr.close();
+            String []tempStrw=line.split(",");
+            double[] tempw=new double[tempStrw.length];
+            for(int i=0;i<tempStrw.length;i++)
+                tempw[i]=Double.parseDouble(tempStrw[i]);
+            w=new SimpleMatrix(1,tempStrw.length,true,tempw);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
     public void storeModule(String fileName) {
         //以模型名命名文件名，将模型永久化存储
         String tempStrw="";

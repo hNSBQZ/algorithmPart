@@ -8,9 +8,12 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class dataHandling {
-    private dataHandling(){}
+public class DataHandling {
+    //该类用于数据从文件中的读取
+    private DataHandling(){}
 
+    //读取文件，最后一行作为标签clean为1，buggy为0分为两个SimpleMatrix类型矩阵，X，y
+    //返回一个哈希表X的标签为“x”,y的标签为“y”
     public static HashMap<String,SimpleMatrix>loadMatrixFromCsv_xy(String fileName){
         HashMap<String,SimpleMatrix> hashMap= new HashMap<String,SimpleMatrix>();
         SimpleMatrix simpleMatrix_x = null;
@@ -59,7 +62,7 @@ public class dataHandling {
         hashMap.put("y",simpleMatrix_y);
         return hashMap;
     }
-
+    //读取文件将整体作为作为一个大矩阵
     public static SimpleMatrix loadMatrixFromCsv(String fileName)
     {
         SimpleMatrix simpleMatrix = null;
@@ -103,7 +106,7 @@ public class dataHandling {
         }
         return simpleMatrix;
     }
-
+    //传入特征矩阵X和标签y矩阵传入，选择比率，返回HashMap，键值分别为train_x,train_y,test_x,test_y
     public static HashMap<String,SimpleMatrix> train_test_split(SimpleMatrix X, SimpleMatrix y,double train_Size)
     {
         /*
@@ -169,6 +172,7 @@ public class dataHandling {
         return hashMap;
     }
 
+    //传入特征矩阵，将特征矩阵的数据归一话处理
     public static SimpleMatrix min_max_handing(SimpleMatrix x){
         double [][] min_max_matrix = new double[x.numRows()][x.numCols()];
         for(int i = 0;i < x.numRows();i++ ){
@@ -203,6 +207,7 @@ public class dataHandling {
         return new SimpleMatrix(min_max_matrix);
     }
 
+    //创造随机数数组
     public static int[] randomSet(int min,int max,int n)
     {
         //随机抽样，某个范围内抽n个
