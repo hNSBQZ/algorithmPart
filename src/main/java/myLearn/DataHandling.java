@@ -121,9 +121,9 @@ public class DataHandling {
         int total_Col = X.numCols();
         int total_Row = X.numRows();
         int train_Row = (int)(total_Row*train_Size);
-        double[][] train_x_D = new double[train_Row][total_Col-1],
+        double[][] train_x_D = new double[train_Row][total_Col],
                 train_y_D = new double[train_Row][1],
-                test_x_D = new double[total_Row-train_Row][total_Col-1],
+                test_x_D = new double[total_Row-train_Row][total_Col],
                 test_y_D = new double[total_Row-train_Row][1];
 //        train_x = new SimpleMatrix(train_Row,total_Col);
 //        train_y = new SimpleMatrix(train_Row,1);
@@ -145,7 +145,7 @@ public class DataHandling {
 
         while(test_iterator.hasNext()){
             int temp = ((Integer)test_iterator.next()).intValue();
-            for(int j = 0;j < total_Col-1;j++){
+            for(int j = 0;j < total_Col;j++){
                 test_x_D[i][j] = X.get(temp,j);
             }
             test_y_D[i][0] = y.get(temp,0);
@@ -154,7 +154,7 @@ public class DataHandling {
 
         while(train_iterator.hasNext()){
             int temp = ((Integer)train_iterator.next()).intValue();
-            for(int j = 0;j < total_Col-1;j++){
+            for(int j = 0;j < total_Col;j++){
                 train_x_D[i_][j] = X.get(temp,j);
 
             }
@@ -212,10 +212,11 @@ public class DataHandling {
     {
         //随机抽样，某个范围内抽n个
         int[] result = new int[n];
+        for(int i=0;i<n;i++)
+            result[i]=-1;
         int count = 0;
         while(count < n) {
-            int num = (int) (Math.random() * (max - min)) + min;
-            //System.out.println(num);
+            int num =new Random().nextInt(max);
             boolean flag = true;
             for (int j = 0; j < n; j++) {
                 if(num == result[j]){

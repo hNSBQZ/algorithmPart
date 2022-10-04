@@ -33,6 +33,8 @@ public class LogisticRegression {
     public double[] fit(SimpleMatrix train_x, SimpleMatrix train_y)//返回训练过程中的损失函数值数组，数组结尾赋值为-1
     {
         double[]JwRecord=new double[TrainingRound+1];
+        train_x=DataHandling.min_max_handing(train_x);
+        System.out.println(train_x);
         int m=train_x.numRows();//样本数量
         int dimension=train_x.numCols();//特征数量
         w=new SimpleMatrix(1,dimension+1);
@@ -46,10 +48,13 @@ public class LogisticRegression {
             for(int j=0;j<dimension+1;j++)
             {
                 //设clean发生的概率为1
+                //System.out.println("j is"+j);
                 double tempSum=0;
+                //System.out.println(m+":"+batchSize);
                 int []selectedRow=DataHandling.randomSet(0,m,batchSize);//批量梯度下降,随机选取下降的向量
                 for(int k=0;k<batchSize;k++)
                 {
+                    //System.out.println("k is"+k);
                     int x=selectedRow[k];
                     double hx=1/(1+Math.pow(Math.E,-(tw.mult(train_x.rows(x,x+1).transpose()).get(0))));
                     tempSum+=(hx-train_y.rows(x,x+1).get(0))*train_x.get(x,j);
@@ -57,7 +62,7 @@ public class LogisticRegression {
                 double tempWj=tw.get(j)*(1-learningRate*lambda/m)-learningRate/m*tempSum;
                 w.set(j,tempWj);
             }
-            //System.out.println(i);
+            //System.out.println("i is"+i);
             double regularization=0,mainPart=0,Jw=0;
             for(int j=0;j<m;j++)
             {
@@ -71,7 +76,7 @@ public class LogisticRegression {
                 regularization+=wj*wj;
             }
             Jw=mainPart/m+lambda/(2*m)*regularization;
-            //System.out.println(Jw);
+            System.out.println(Jw);
             JwRecord[i]=Jw;
             if(i!=0 && JwRecord[i-1]-JwRecord[i]<threshold)
             {
@@ -121,12 +126,16 @@ public class LogisticRegression {
     }
     public SimpleMatrix predict(SimpleMatrix test_x)
     {
+
         if(w==null)return null;
+        System.out.println(w);
+        test_x=DataHandling.min_max_handing(test_x);
         int m=test_x.numRows();
         double []pred_y=new double[m];
         SimpleMatrix stuff=new SimpleMatrix(m,1);//填充矩阵
         stuff.fill(1);
         test_x=stuff.combine(0,1,test_x);
+        //System.out.println(test_x);
         for(int i=0;i<m;i++)
         {
             double y=1/(1+Math.pow(Math.E,-(w.mult(test_x.rows(i,i+1).transpose())).get(0)));
