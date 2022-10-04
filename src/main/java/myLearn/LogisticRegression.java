@@ -34,7 +34,7 @@ public class LogisticRegression {
     {
         double[]JwRecord=new double[TrainingRound+1];
         train_x=DataHandling.min_max_handing(train_x);
-        System.out.println(train_x);
+        //System.out.println(train_x);
         int m=train_x.numRows();//样本数量
         int dimension=train_x.numCols();//特征数量
         w=new SimpleMatrix(1,dimension+1);
@@ -76,7 +76,7 @@ public class LogisticRegression {
                 regularization+=wj*wj;
             }
             Jw=mainPart/m+lambda/(2*m)*regularization;
-            System.out.println(Jw);
+            //System.out.println(Jw);
             JwRecord[i]=Jw;
             if(i!=0 && JwRecord[i-1]-JwRecord[i]<threshold)
             {
@@ -128,7 +128,7 @@ public class LogisticRegression {
     {
 
         if(w==null)return null;
-        System.out.println(w);
+        //System.out.println(w);
         test_x=DataHandling.min_max_handing(test_x);
         int m=test_x.numRows();
         double []pred_y=new double[m];

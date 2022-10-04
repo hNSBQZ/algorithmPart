@@ -1,11 +1,11 @@
 package myLearn;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
 import org.ejml.simple.SimpleMatrix;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DataHandling {
@@ -231,4 +231,63 @@ public class DataHandling {
         }
         return result;
     }
+
+    private static String[] insert(String[] arr, String... str)
+    {
+        int size=arr.length;
+        int newSize=size+str.length;
+        String[] tmp =new String[newSize];
+        for(int i=0;i<size;i++)
+        {
+            tmp[i]=arr[i];
+        }
+        for(int i=size;i<newSize;i++)
+        {
+            tmp[i]=str[i-size];
+        }
+        return tmp;
+    }
+    public static void appendNewRowToCsv(String oldFileName,String newFileName,SimpleMatrix result) throws FileNotFoundException {
+        ArrayList <String[]>list = new ArrayList();
+        DataInputStream in = null;
+        try {
+            in = new DataInputStream(new FileInputStream(new File(oldFileName)));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        CSVReader csvReader = null;
+        try {
+            csvReader = new CSVReader(new InputStreamReader(in, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        String[] strs;
+        while (true) {
+            try {
+                if (!((strs = csvReader.readNext()) != null)) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (CsvValidationException e) {
+                throw new RuntimeException(e);
+            }
+            //System.out.println(Arrays.deepToString(strs));
+            list.add(strs);
+        }
+        try {
+            csvReader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        list.set(0,insert(list.get(0),"result"));
+        for(int i=1;i<list.size();i++)
+        {
+            String resultStr=(result.get(i)==1)?"clean":"buggy";
+            list.set(1,insert(list.get(1),resultStr));
+        }
+        FileOutputStream fos = new FileOutputStream(newFileName);
+        OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+        CSVWriter writer = new CSVWriter(osw);
+        writer.writeAll(list);
+    }
+
 }

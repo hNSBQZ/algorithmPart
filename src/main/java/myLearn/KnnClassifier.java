@@ -26,7 +26,7 @@ public class KnnClassifier {
             String temp = "";
             String line =br.readLine();
             K=Integer.parseInt(line);
-            System.out.println(K);
+            //System.out.println(K);
             while(line !=null){
                 line=br.readLine();
                 //System.out.println(line);
@@ -53,7 +53,7 @@ public class KnnClassifier {
 //                }
 //            }
             model = new SimpleMatrix(model_d);
-            System.out.println(model);
+            //System.out.println(model);
         } catch (FileNotFoundException e){
             throw new RuntimeException(e);
         } catch (IOException e){
