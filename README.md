@@ -1,0 +1,4 @@
+# algorithmPart
+实训课项目“软件缺陷预测网站”算法部分
+实现了算法包myLearn
+其中utils提供了可返回多种数据结构的元组，方法类DataHandling提供了从csv读写矩阵，将矩阵划分训练集的方法，ErrorAnalysis提供了计算准确率，混淆矩阵等方法，同时还有两个classifier实现了逻辑回归和knn算法，两个类可以实现训练，预测，存储模型，读取模型的功能
