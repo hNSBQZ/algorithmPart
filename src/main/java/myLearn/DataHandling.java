@@ -247,7 +247,7 @@ public class DataHandling {
         }
         return tmp;
     }
-    public static void appendNewRowToCsv(String oldFileName,String newFileName,SimpleMatrix result) throws FileNotFoundException {
+    public static void appendNewRowToCsv(String oldFileName,String newFileName,SimpleMatrix result) {
         ArrayList <String[]>list = new ArrayList();
         DataInputStream in = null;
         try {
@@ -281,10 +281,15 @@ public class DataHandling {
         list.set(0,insert(list.get(0),"result"));
         for(int i=1;i<list.size();i++)
         {
-            String resultStr=(result.get(i)==1)?"clean":"buggy";
-            list.set(1,insert(list.get(1),resultStr));
+            String resultStr=(result.get(i-1)==1)?"clean":"buggy";
+            list.set(i,insert(list.get(i),resultStr));
         }
-        FileOutputStream fos = new FileOutputStream(newFileName);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(newFileName);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
         CSVWriter writer = new CSVWriter(osw);
         writer.writeAll(list);

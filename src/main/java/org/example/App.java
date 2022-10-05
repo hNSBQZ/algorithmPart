@@ -1,10 +1,7 @@
 package org.example;
 
 
-import myLearn.DataHandling;
-import myLearn.ErrorAnalysis;
-import myLearn.KnnClassifier;
-import myLearn.LogisticRegression;
+import myLearn.*;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.HashMap;
@@ -20,7 +17,7 @@ public class App
         //代码示例
         //训练模型
         //1.管理员提交用来训练的文档,从中提取标签矩阵和特征矩阵
-
+        /*
         HashMap<String,SimpleMatrix> temp= DataHandling.loadMatrixFromCsv_xy("JDT.csv");
         SimpleMatrix X=temp.get("x");
         SimpleMatrix y=temp.get("y");
@@ -49,7 +46,7 @@ public class App
         System.out.println(test_y);
         confusionMatrix=ErrorAnalysis.cal_matrix(predict_y,test_y);
         System.out.println(confusionMatrix);
-
-        PredictControl.predictControl("LogisticRegression1","JDT.csv");
+        */
+        UsingController.predictControl("LogisticRegression1","Lucene.csv");
     }
 }

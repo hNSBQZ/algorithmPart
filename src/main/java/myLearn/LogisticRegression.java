@@ -36,6 +36,7 @@ public class LogisticRegression {
         train_x=DataHandling.min_max_handing(train_x);
         //System.out.println(train_x);
         int m=train_x.numRows();//样本数量
+        if(batchSize>m)batchSize=m;
         int dimension=train_x.numCols();//特征数量
         w=new SimpleMatrix(1,dimension+1);
         w.fill(0.1);//初始化模型
