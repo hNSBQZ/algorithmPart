@@ -2,6 +2,8 @@ package org.example;
 
 
 import myLearn.*;
+import myLearn.utils.FiveTuple;
+import myLearn.utils.FourTuple;
 import org.ejml.simple.SimpleMatrix;
 
 import java.util.HashMap;
@@ -14,39 +16,20 @@ public class App
 {
     public static void main( String[] args )
     {
-        //代码示例
-        //训练模型
-        //1.管理员提交用来训练的文档,从中提取标签矩阵和特征矩阵
-        /*
-        HashMap<String,SimpleMatrix> temp= DataHandling.loadMatrixFromCsv_xy("JDT.csv");
-        SimpleMatrix X=temp.get("x");
-        SimpleMatrix y=temp.get("y");
-        System.out.println(X.numCols());
 
-        //训练集划分
-        temp=DataHandling.train_test_split(X,y,0.8);
-        SimpleMatrix train_x=temp.get("train_x");
-        SimpleMatrix train_y=temp.get("train_y");
-        SimpleMatrix test_x=temp.get("test_x");
-        SimpleMatrix test_y=temp.get("test_y");
-        System.out.println(test_x.numCols());
-
-        LogisticRegression l1=new LogisticRegression(3000,0.000001,0,0.1,797);
-        l1.fit(train_x,train_y);
-        l1.storeModule("LogisticRegression1");
-        SimpleMatrix predict_y=l1.predict(test_x);
-        SimpleMatrix confusionMatrix=ErrorAnalysis.cal_matrix(predict_y,test_y);
-        System.out.println(confusionMatrix);
-
-        KnnClassifier k1=new KnnClassifier();
-        k1.fit(train_x,train_y);
-        k1.storeModule("Knn1");
-        predict_y=k1.predict(test_x);
-        System.out.println(predict_y);
-        System.out.println(test_y);
-        confusionMatrix=ErrorAnalysis.cal_matrix(predict_y,test_y);
-        System.out.println(confusionMatrix);
-        */
+        FourTuple<SimpleMatrix, Double, Double, Double> dataPack=UsingController.trainingKnnControl(9,"JDT.csv","Knn2",0.8);
+        System.out.println("混淆矩阵，准确率，精度，召回率");
+        System.out.println(dataPack.first);
+        System.out.println(dataPack.second);
+        System.out.println(dataPack.third);
+        System.out.println(dataPack.fourth);
+        FiveTuple<double[],SimpleMatrix, Double, Double, Double> dataPack1=UsingController.trainingLogisticRegressionControl(3000,0.000001,0,0.1,797,"JDT.csv","lgr2",0.8);
+        System.out.println("混淆矩阵，准确率，精度，召回率");
+        //first是一个数组，里面为损失函数变化值
+        System.out.println(dataPack1.second);
+        System.out.println(dataPack1.third);
+        System.out.println(dataPack1.fourth);
+        System.out.println(dataPack1.fifth);
         UsingController.predictControl("LogisticRegression1","Lucene.csv");
     }
 }
