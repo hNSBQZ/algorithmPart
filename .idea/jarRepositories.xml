@@ -16,5 +16,15 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="GroupDocsJavaAPI" />
+      <option name="name" value="GroupDocs Java API" />
+      <option name="url" value="http://repository.groupdocs.com/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="com.e-iceblue" />
+      <option name="name" value="e-iceblue" />
+      <option name="url" value="http://repo.e-iceblue.com/nexus/content/groups/public" />
+    </remote-repository>
   </component>
 </project>

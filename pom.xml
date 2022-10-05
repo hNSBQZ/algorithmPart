@@ -14,6 +14,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>GroupDocsJavaAPI</id>
+      <name>GroupDocs Java API</name>
+      <url>http://repository.groupdocs.com/repo/</url>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -27,11 +34,10 @@
       <artifactId>ejml-all</artifactId>
       <version>0.41</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
     <dependency>
-      <groupId>com.opencsv</groupId>
-      <artifactId>opencsv</artifactId>
-      <version>5.5.2</version>
+      <groupId>com.groupdocs</groupId>
+      <artifactId>groupdocs-conversion</artifactId>
+      <version>21.7</version>
     </dependency>
   </dependencies>
 </project>
