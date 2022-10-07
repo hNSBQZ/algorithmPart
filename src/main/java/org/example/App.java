@@ -7,6 +7,8 @@ import myLearn.utils.FiveTuple;
 import myLearn.utils.FourTuple;
 import org.ejml.simple.SimpleMatrix;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -17,6 +19,7 @@ public class App
 {
     public static void main( String[] args )
     {
+        /*
         //Csv与excel相互转换的例子
         CsvAndXls.CsvToXlsx("JDT.csv","JDT.xls");
         CsvAndXls.XlsxToCsv("JDT.xls","abc.csv");
@@ -37,9 +40,8 @@ public class App
         System.out.println(dataPack1.third);
         System.out.println(dataPack1.fourth);
         System.out.println(dataPack1.fifth);
-
+        */
         //用户预测例子
-        UsingController.predictControl("LogisticRegression1","Lucene.csv");
-
+        UsingController.predictControl("Modules/Knn2","FileForPerdict/Lucene.csv");
     }
 }

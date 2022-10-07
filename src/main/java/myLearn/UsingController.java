@@ -66,8 +66,11 @@ public class UsingController {
 
     public static void predictControl(String moduleName,String uploadFile)
     {
+        System.out.println(moduleName);
+        char moduleType=moduleName.charAt(moduleName.lastIndexOf('/')+1);
         SimpleMatrix result=null;
-        if(moduleName.charAt(0)=='L'||moduleName.charAt(0)=='l')
+
+        if(moduleType=='L'||moduleType=='l')
         {
             LogisticRegression l=new LogisticRegression();
             l.fitFromFile(moduleName);
@@ -79,7 +82,7 @@ public class UsingController {
             String newFileName=uploadFile.substring(0,uploadFile.lastIndexOf('.'))+"-result.csv";
             appendNewRowToCsv(uploadFile,newFileName,result);
         }
-        if(moduleName.charAt(0)=='K'||moduleName.charAt(0)=='k')
+        if(moduleType=='K'||moduleType=='k')
         {
             KnnClassifier k=new KnnClassifier();
             k.fitFromFile(moduleName);
