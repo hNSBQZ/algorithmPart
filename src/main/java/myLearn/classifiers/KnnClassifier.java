@@ -67,7 +67,6 @@ public class KnnClassifier {
             br.close();
             fr.close();
             model=modelFromFile;
-            System.out.println(model);
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
