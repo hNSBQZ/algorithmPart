@@ -1,9 +1,15 @@
-package myLearn;
+package myLearn.classifiers;
 
+import myLearn.dataController.DataHandling;
 import org.ejml.simple.SimpleMatrix;
 
 import java.io.*;
-
+/**
+ * 实现逻辑回归
+ * @author hqz
+ * @version 1.0
+ *
+ */
 public class LogisticRegression {
     private int TrainingRound = 0;
     private double threshold = 0;
@@ -12,6 +18,14 @@ public class LogisticRegression {
     private int batchSize = 0;
     private SimpleMatrix w = null;
 
+    /**
+     *
+     * @param TrainingRound 训练轮数
+     * @param threshold 收敛阈值
+     * @param lambda 正则化参数
+     * @param learningRate 学习率
+     * @param batchSize 批量下降每一批的数量，数量大于样本数则按样本数计算
+     */
     public LogisticRegression(int TrainingRound, double threshold, double lambda, double learningRate, int batchSize) {
         this.TrainingRound = TrainingRound;
         this.threshold = threshold;
@@ -23,14 +37,13 @@ public class LogisticRegression {
     public LogisticRegression() {
     }
 
-    public void setTrainingArg(int TrainingRound, double threshold, double lambda, double learningRate, int batchSize) {
-        this.TrainingRound = TrainingRound;
-        this.threshold = threshold;
-        this.lambda = lambda;
-        this.learningRate = learningRate;
-        this.batchSize = batchSize;
-    }
-
+    /**
+     *用于训练模型w
+     * @param train_x SimpleMatrix类型的特征矩阵x
+     * @param train_y SimpleMatrix类型的01标签矩阵y
+     * @return 返回double类型数组，用于记录过程中损失函数变化，-1代表训练中止
+     *
+     */
     public double[] fit(SimpleMatrix train_x, SimpleMatrix train_y)//返回训练过程中的损失函数值数组，数组结尾赋值为-1
     {
         double[] JwRecord = new double[TrainingRound + 1];
@@ -84,6 +97,11 @@ public class LogisticRegression {
         return JwRecord;
     }
 
+    /**
+     * 从指定的模型中加载系数矩阵w
+     * @param fileName 指定的模型的路径
+     *
+     */
     public void fitFromFile(String fileName) {
         //从指定文件名里加载模型
         FileReader fr = null;
@@ -105,6 +123,11 @@ public class LogisticRegression {
         }
     }
 
+    /**
+     *将训练好的模型（系数矩阵w）永久化存储
+     * @param fileName 要存储的模型文件路径
+     *
+     */
     public void storeModule(String fileName) {
         //以模型名命名文件名，将模型永久化存储
         String tempStrw = "";
@@ -122,6 +145,11 @@ public class LogisticRegression {
 
     }
 
+    /**
+     *
+     * @param test_x 用于预测的特征矩阵x
+     * @return 返回预测出来的SimpleMatrix类型的01标签向量
+     */
     public SimpleMatrix predict(SimpleMatrix test_x) {
 
         if (w == null) return null;

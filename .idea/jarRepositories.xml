@@ -26,5 +26,10 @@
       <option name="name" value="e-iceblue" />
       <option name="url" value="http://repo.e-iceblue.com/nexus/content/groups/public" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="AsposeJavaAPI" />
+      <option name="name" value="Aspose Java API" />
+      <option name="url" value="https://repository.aspose.com/repo/" />
+    </remote-repository>
   </component>
 </project>

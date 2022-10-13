@@ -1,9 +1,16 @@
-package myLearn;
+package myLearn.classifiers;
 
+import myLearn.dataController.DataHandling;
 import org.ejml.simple.SimpleMatrix;
 
 import java.io.*;
 
+/**
+ * 实现knn分类器
+ * @author wl
+ * @version 1.0
+ *
+ */
 public class KnnClassifier {
     SimpleMatrix model = null;
     private int K = 9;
@@ -12,61 +19,71 @@ public class KnnClassifier {
 
     }//初始化分类器，选择邻居数量，要感兴趣可以提供选择距离方法，k近邻搜索方法
 
+    /**
+     *
+     * @param k knn的邻居数量
+     */
     public KnnClassifier(int k) {
         K = k;
     }
 
+    /**
+     * 存储训练集作为预测时计算距离的依据
+     *@param train_x SimpleMatrix类型的特征矩阵x
+     *@param train_y SimpleMatrix类型的01标签矩阵y
+     *
+     */
     public void fit(SimpleMatrix train_x, SimpleMatrix train_y) {
         model = train_x.concatColumns(train_y);
     }
 
+    /**
+     *用于从文件加载knn模型
+     * @param fileName 模型所在路径
+     *
+     */
     public void fitFromFile(String fileName) {
         //从指定文件名里加载模型
         FileReader fr = null;
         try {
             fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
-            String temp = "";
             String line = br.readLine();
             K = Integer.parseInt(line);
             //System.out.println(K);
-            while (line != null) {
+            line=br.readLine();
+            String[] temp=line.split(",");
+            int numCol=Integer.parseInt(temp[0]);
+            int numRow=Integer.parseInt(temp[1]);
+            SimpleMatrix modelFromFile=new SimpleMatrix(numRow,numCol);
+            for(int i=0;i<numRow;i++)
+            {
                 line = br.readLine();
-                //System.out.println(line);
-                temp += line;
+                temp=line.split(",");
+                for(int j=0;j<numCol;j++)
+                    modelFromFile.set(i,j,Double.parseDouble(temp[j]));
             }
             //System.out.println(temp);
             br.close();
             fr.close();
-            String[] tempStrw = temp.split(",");
-            double[][] model_d = new double[tempStrw.length / 62][62];
-            for (int i = 0; i < tempStrw.length / 62; i++) {
-                for (int j = 0; j < 62; j++) {
-                    model_d[i][j] = Double.parseDouble(tempStrw[i * j + j]);
-                }
-            }
-//            String []tempStrw=temp.split(",");
-//            double[] tempw=new double[tempStrw.length];
-//            for(int i=0;i<tempStrw.length;i++)
-//                tempw[i]=Double.parseDouble(tempStrw[i]);
-//            double[][] model_d = new double[tempw.length/62][62];
-//            for(int i = 0;i<tempw.length/62;i++){
-//                for(int j = 0;j<62;j++){
-//                    model_d[i][j] = tempw[i*j+j];
-//                }
-//            }
-            model = new SimpleMatrix(model_d);
-            //System.out.println(model);
+            model=modelFromFile;
+            System.out.println(model);
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     *将模型（用于后续计算距离的点集）永久化存储
+     * @param fileName 要存储的模型文件路径
+     *
+     */
     public void storeModule(String fileName) {
         //以模型名命名文件名，将模型永久化存储
         String[][] tempStrw = new String[model.numRows()][model.numCols()];
+        //System.out.println(model);
         for (int i = 0; i < model.numRows(); i++) {
             for (int j = 0; j < model.numCols(); j++) {
                 tempStrw[i][j] = "" + model.get(i, j);
@@ -77,6 +94,7 @@ public class KnnClassifier {
             FileWriter writer = new FileWriter(fileName);
             writer.write("");
             writer.write(String.valueOf(K) + '\n');
+            writer.write(model.numCols()+","+model.numRows()+"\n");
             for (int i = 0; i < model.numRows(); i++) {
                 for (int j = 0; j < model.numCols(); j++) {
                     writer.write(tempStrw[i][j] + ",");
@@ -90,7 +108,11 @@ public class KnnClassifier {
         }
 
     }
-
+    /**
+     *
+     * @param test_x_ 用于预测的特征矩阵x
+     * @return 返回预测出来的SimpleMatrix类型的01标签向量
+     */
     public SimpleMatrix predict(SimpleMatrix test_x_) {
 
 //        SimpleMatrix data = dataHanding.loadMatrixFromCsv(filemane);
@@ -131,7 +153,7 @@ public class KnnClassifier {
         Knn，核心过程
          */
         for (int i = 0; i < test_x_min_max_double.length; i++) {
-            double[] distance = new double[x_min_max_double.length];
+            double[] distance = new double[x_min_max_double.length];//保存个点距离
             for (int j = 0; j < x_min_max_double.length; j++) {
                 distance[j] = cal_distance(x_min_max_double[j], test_x_min_max_double[i]);
             }
@@ -153,7 +175,6 @@ public class KnnClassifier {
         }
         return new SimpleMatrix(pre_type.length, 1, true, pre_type);
     }
-
     private int[] find_k_index(double[] distinceArray, int K) {
         int[] min_index = new int[K];
         int[] index = new int[distinceArray.length];
@@ -174,12 +195,11 @@ public class KnnClassifier {
                 }
             }
         } else {
-            System.out.println("sbsbwbsbsbsbsbsbsb");
+            System.out.println("排序数组为空");
         }
         for (int i = 0; i < K; i++) min_index[i] = index[i];
         return min_index;
     }
-
     //计算临近距离[除开求解分类]
     private double cal_distance(double[] paraFirstData, double[] paraSecondData) {
         double tempDistince = 0;
